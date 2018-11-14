@@ -12,7 +12,8 @@
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library. */
+ * License along with this library.
+ */
 package com.jpexs.decompiler.flash.abc.avm2.model;
 
 import com.jpexs.decompiler.flash.abc.avm2.AVM2ConstantPool;
@@ -107,6 +108,17 @@ public class FullMultinameAVM2Item extends AVM2Item {
              if ((ns != null)&&(ns.name_index!=0)) {
              ret =  hilight(ns.getName(constants) + "::")+ret;
              }*/
+            
+            AVM2ConstantPool constants = localData.constantsAvm2;
+        //    Namespace ns = constants.getMultiname(multinameIndex).getNamespace(constants);
+           // String ddd = constants.getMultiname(multinameIndex).getNameNamespace(constants);
+            List<DottedChain> fullyQualifiedNames =  localData.fullyQualifiedNames;
+             ArrayList loc1 = constants.getMultiname(multinameIndex).getName2(constants, fullyQualifiedNames, false, false);//возврат имени области видимости
+        if((loc1.size()>1) && (loc1.get(1) != null)){
+             writer.append(loc1.get(1)+"::");  
+        }else{
+         // writer.append(loc1.get(0)+"::1");  
+        }
         }
         if (name != null) {
             writer.append("[");

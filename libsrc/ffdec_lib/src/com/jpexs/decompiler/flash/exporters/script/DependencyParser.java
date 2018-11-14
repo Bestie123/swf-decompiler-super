@@ -12,7 +12,8 @@
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library. */
+ * License along with this library.
+ */
 package com.jpexs.decompiler.flash.exporters.script;
 
 import com.jpexs.decompiler.flash.abc.ABC;
@@ -34,6 +35,8 @@ import com.jpexs.decompiler.flash.abc.types.Namespace;
 import com.jpexs.decompiler.flash.abc.types.NamespaceSet;
 import com.jpexs.decompiler.flash.tags.ABCContainerTag;
 import com.jpexs.decompiler.graph.DottedChain;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DependencyParser {
@@ -44,13 +47,25 @@ public class DependencyParser {
             name = "*";
         }
         DottedChain newimport = ns.getName(abc.constants);
-
+        
         if (parseUsagesFromNS(ignoredCustom, abc, dependencies, uses, namespace_index, ignorePackage, name)) {
             return;
         } else if ((ns.kind != Namespace.KIND_PACKAGE) && (ns.kind != Namespace.KIND_PACKAGE_INTERNAL)) {
             return;
         }
-        newimport = newimport.addWithSuffix(name);
+        //удаление двуеточия
+        String fiximport = newimport.toString(); // fix import for compiled use namespace
+        if (fiximport.contains(":")) { //если двоеточие то установить use namespace
+            String[] loc1 = fiximport.split(":|[.]");
+            ArrayList<String> aList = new ArrayList<String>(Arrays.asList(loc1));
+            newimport = new DottedChain(aList);
+            String name2 = newimport.getLast();//взять последнюю строку как пространство имене
+            if (!uses.contains(name2)) {
+                uses.add(name2); //добавить пространство имен в use namespace, если нет совпадений
+            }          
+        } else { //не двоеточие
+            newimport = newimport.addWithSuffix(name);
+        }
         Dependency dep = new Dependency(newimport, dependencyType);
 
         if (!dependencies.contains(dep)) {
@@ -62,7 +77,6 @@ public class DependencyParser {
                 dependencies.add(dep);
             }
         }
-        //}
     }
 
     public static void parseDependenciesFromMultiname(String ignoredCustom, ABC abc, List<Dependency> dependencies, List<String> uses, Multiname m, DottedChain ignorePackage, List<DottedChain> fullyQualifiedNames, DependencyType dependencyType) {

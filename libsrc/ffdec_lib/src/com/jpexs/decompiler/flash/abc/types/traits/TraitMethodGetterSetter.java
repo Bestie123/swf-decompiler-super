@@ -12,7 +12,8 @@
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library. */
+ * License along with this library.
+ */
 package com.jpexs.decompiler.flash.abc.types.traits;
 
 import com.jpexs.decompiler.flash.abc.ABC;
@@ -92,10 +93,12 @@ public class TraitMethodGetterSetter extends Trait {
         if (((classIndex == -1) || (!abc.instance_info.get(classIndex).isInterface())) && (body == null)) {
             writer.appendNoHilight("native ");
         }
-
-        getModifiers(abc, isStatic, writer);
+        ArrayList loc1 = getName(abc).getName2(abc.constants, fullyQualifiedNames, false, false);
+        if ((loc1.size() > 1) && (loc1.get(1) != null)) {
+            writer.append(loc1.get(1).toString() + " ");
+        }
         writer.hilightSpecial("function " + addKind, HighlightSpecialType.TRAIT_TYPE);
-        writer.hilightSpecial(getName(abc).getName(abc.constants, fullyQualifiedNames, false, true), HighlightSpecialType.TRAIT_NAME);
+        writer.hilightSpecial(loc1.get(0).toString(), HighlightSpecialType.TRAIT_NAME);
         writer.appendNoHilight("(");
         abc.method_info.get(method_info).getParamStr(writer, abc.constants, body, abc, fullyQualifiedNames);
         writer.appendNoHilight(") : ");
@@ -130,7 +133,6 @@ public class TraitMethodGetterSetter extends Trait {
         }
         getMetaData(parent, convertData, abc, writer);
         writer.startMethod(method_info);
-        path = path + "." + getName(abc).getName(abc.constants, fullyQualifiedNames, false, true);
         toStringHeader(parent, convertData, path, abc, isStatic, exportMode, scriptIndex, classIndex, writer, fullyQualifiedNames, parallel);
         int bodyIndex = abc.findBodyIndex(method_info);
         if (classIndex != -1 && abc.instance_info.get(classIndex).isInterface() || bodyIndex == -1) {

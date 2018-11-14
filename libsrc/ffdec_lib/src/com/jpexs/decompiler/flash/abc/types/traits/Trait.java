@@ -12,7 +12,8 @@
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library. */
+ * License along with this library.
+ */
 package com.jpexs.decompiler.flash.abc.types.traits;
 
 import com.jpexs.decompiler.flash.IdentifiersDeobfuscation;
@@ -233,9 +234,10 @@ public abstract class Trait implements Cloneable, Serializable {
             if (importnames.contains(name)) {
                 imports.remove(i);
                 i--;
-                fullyQualifiedNames.add(DottedChain.parseWithSuffix(name));
+             //   fullyQualifiedNames.add(DottedChain.parseWithSuffix(name));
             } else {
                 importnames.add(name);
+                fullyQualifiedNames.add(DottedChain.parseWithSuffix(name));
             }
         }
 

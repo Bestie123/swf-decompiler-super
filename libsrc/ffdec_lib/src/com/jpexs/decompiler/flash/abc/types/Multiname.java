@@ -12,7 +12,8 @@
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library. */
+ * License along with this library.
+ */
 package com.jpexs.decompiler.flash.abc.types;
 
 import com.jpexs.decompiler.flash.IdentifiersDeobfuscation;
@@ -347,6 +348,48 @@ public class Multiname {
             typeNameStr.append(">");
         }
         return typeNameStr.toString();
+    }
+
+  public String getNameNamespace(AVM2ConstantPool constants) {
+        Namespace ns = getNamespace(constants);
+        if (ns != null) {
+            List loc1 = ns.getName(constants).toList();
+            if (!loc1.isEmpty()) {
+                String fixnamespace = (String) loc1.get(loc1.size() - 1); // fix import for compiled use namespace
+                if (fixnamespace.contains(":")) {
+                    String[] loc2 = fixnamespace.split(":");
+                    String loc3 = loc2[loc2.length - 1];
+                    return loc3;
+                }
+            }
+        }
+        return null;
+    }
+
+        public ArrayList getName2(AVM2ConstantPool constants, List<DottedChain> fullyQualifiedNames, boolean dontDeobfuscate, boolean withSuffix) {
+        ArrayList<String> loc1 = new ArrayList<>();
+        if (kind == TYPENAME) {
+            loc1.add(typeNameToStr(constants, fullyQualifiedNames, dontDeobfuscate, withSuffix));
+            return loc1;
+            //  return   typeNameToStr(constants, fullyQualifiedNames, dontDeobfuscate, withSuffix);
+        }
+        if (name_index == -1) {
+            loc1.add("");
+            return loc1;
+        }
+        if (name_index == 0) {
+            loc1.add(isAttribute() ? "@*" : "*");
+            return loc1;
+        } else {
+            String name = constants.getString(name_index);
+             if (fullyQualifiedNames != null && fullyQualifiedNames.contains(DottedChain.parseWithSuffix(getNameNamespace(constants)))) {
+            loc1.add(name);
+            loc1.add(getNameNamespace(constants));
+            return loc1;
+            }
+             loc1.add((isAttribute() ? "@" : "") + (dontDeobfuscate ? name : IdentifiersDeobfuscation.printIdentifier(true, name)) + (withSuffix ? getNamespaceSuffix() : ""));
+              return loc1;
+        }
     }
 
     public String getName(AVM2ConstantPool constants, List<DottedChain> fullyQualifiedNames, boolean dontDeobfuscate, boolean withSuffix) {
