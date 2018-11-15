@@ -371,7 +371,6 @@ public class Multiname {
         if (kind == TYPENAME) {
             loc1.add(typeNameToStr(constants, fullyQualifiedNames, dontDeobfuscate, withSuffix));
             return loc1;
-            //  return   typeNameToStr(constants, fullyQualifiedNames, dontDeobfuscate, withSuffix);
         }
         if (name_index == -1) {
             loc1.add("");

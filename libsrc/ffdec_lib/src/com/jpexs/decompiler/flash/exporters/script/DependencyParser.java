@@ -47,7 +47,7 @@ public class DependencyParser {
             name = "*";
         }
         DottedChain newimport = ns.getName(abc.constants);
-        
+
         if (parseUsagesFromNS(ignoredCustom, abc, dependencies, uses, namespace_index, ignorePackage, name)) {
             return;
         } else if ((ns.kind != Namespace.KIND_PACKAGE) && (ns.kind != Namespace.KIND_PACKAGE_INTERNAL)) {
@@ -62,7 +62,7 @@ public class DependencyParser {
             String name2 = newimport.getLast();//взять последнюю строку как пространство имене
             if (!uses.contains(name2)) {
                 uses.add(name2); //добавить пространство имен в use namespace, если нет совпадений
-            }          
+            }
         } else { //не двоеточие
             newimport = newimport.addWithSuffix(name);
         }
@@ -99,8 +99,8 @@ public class DependencyParser {
                 parseDependenciesFromNS(ignoredCustom, abc, dependencies, uses, m.namespace_index, ignorePackage, name, dependencyType);
             }
             if (nss != null) {
-                for (int n : nss.namespaces) {
-                    parseDependenciesFromNS(ignoredCustom, abc, dependencies, uses, n, ignorePackage, nss.namespaces.length > 1 ? "" : name, dependencyType);
+                for (int n = 0; n < nss.namespaces.length; n++) {
+                    parseDependenciesFromNS(ignoredCustom, abc, dependencies, uses, nss.namespaces[n], ignorePackage, n < nss.namespaces.length - 1 ? "" : name, dependencyType);
                 }
             }
         }

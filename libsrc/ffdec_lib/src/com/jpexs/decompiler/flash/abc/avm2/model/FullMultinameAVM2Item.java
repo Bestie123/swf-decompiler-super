@@ -104,14 +104,7 @@ public class FullMultinameAVM2Item extends AVM2Item {
             namespace.toString(writer, localData);
             writer.append("::");
         } else {
-            /*Namespace ns = constants.getMultiname(multinameIndex).getNamespace(constants);
-             if ((ns != null)&&(ns.name_index!=0)) {
-             ret =  hilight(ns.getName(constants) + "::")+ret;
-             }*/
-            
             AVM2ConstantPool constants = localData.constantsAvm2;
-        //    Namespace ns = constants.getMultiname(multinameIndex).getNamespace(constants);
-           // String ddd = constants.getMultiname(multinameIndex).getNameNamespace(constants);
             List<DottedChain> fullyQualifiedNames =  localData.fullyQualifiedNames;
              ArrayList loc1 = constants.getMultiname(multinameIndex).getName2(constants, fullyQualifiedNames, false, false);//возврат имени области видимости
         if((loc1.size()>1) && (loc1.get(1) != null)){
